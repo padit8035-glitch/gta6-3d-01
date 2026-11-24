@@ -2,6 +2,11 @@
 // number a designer would want to change: world size, speeds, wanted rules,
 // mission money. The simulation runs on a flat (x, y) plane, y pointing
 // north; the 3D renderer maps (x, y) to (x, 0, -y) in three.js space.
+//
+// The grid: WORLD (2560) is 8 road gaps of ROAD_GAP (320), so roads run at
+// 0, 320, ..., 2560 and blocks are BLOCK (252) wide between them. STEP is
+// the fixed 60 Hz simulation step — the world never runs on a variable
+// frame time, which is what keeps replays deterministic for a given seed.
 export const STEP = 1 / 60;
 export const WORLD = 2560;
 export const ROAD_GAP = 320;

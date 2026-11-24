@@ -22,12 +22,13 @@ export function makeCar(kind, x, y, angle, rand) {
     route: 0, // traffic heading axis: 0 = east-west, 1 = north-south
     dir: 1,
     stuck: 0,
-    flash: 0, // police light bar phase
+    flash: 0, // police light-bar phase (seconds); the renderer blinks on it
     shootTimer: 0,
     ramCooldown: 0,
     crashTimer: 0, // seconds until the next building-hit dent
-    lastSeen: 0, // seconds since this cruiser was close to the player
-    gone: false,
+    lastSeen: 0, // seconds since this cruiser was close to the player; the
+    // chase gives up after 25 s without a sighting (see world.js)
+    gone: false, // true once the car is wrecked and removed from the world
   };
 }
 

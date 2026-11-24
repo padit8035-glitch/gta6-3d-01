@@ -1,7 +1,7 @@
 // Vice Point 3D — the HUD: wanted stars, money, health, the mission
 // objective with its distance, speed, the toast line, the target arrow and
 // a live top-down minimap. All DOM and 2D canvas, fed by the world state.
-import { WORLD, MINIMAP } from './config.js';
+import { WORLD, ROAD_GAP, MINIMAP } from './config.js';
 import { objectiveText, currentMission } from './missions.js';
 
 export function createHud(world) {
@@ -32,9 +32,11 @@ export function createHud(world) {
         park.w * scale, park.d * scale,
       );
     }
-    // Roads.
+    // Roads, derived from the grid constants instead of a hardcoded list:
+    // one road every ROAD_GAP units from 0 to WORLD (0, 320, ..., 2560).
     ctx.fillStyle = '#5a5d63';
-    const roads = [0, 320, 640, 960, 1280, 1600, 1920, 2240, 2560];
+    const roads = [];
+    for (let r = 0; r <= WORLD; r += ROAD_GAP) roads.push(r);
     for (const r of roads) {
       ctx.fillRect(0, r * scale - 2, MINIMAP, 4);
       ctx.fillRect(r * scale - 2, 0, 4, MINIMAP);
@@ -110,6 +112,8 @@ export function createHud(world) {
       distance.textContent = '';
       arrow.style.display = 'none';
     }
+    // World units per second to miles per hour: a car at the 560 max speed
+    // reads about 78 mph, which feels right for a city chase.
     speed.textContent = player.inCar ? `${Math.round(Math.abs(player.inCar.speed) * 0.14)} mph` : '';
     toast.textContent = world.missions.toastTimer > 0 ? world.missions.toast : '';
     toast.style.opacity = world.missions.toastTimer > 0 ? '1' : '0';

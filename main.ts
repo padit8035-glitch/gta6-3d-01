@@ -18,6 +18,12 @@ import { buildDossier } from './vendor/makefun-game.ts';
 const here = fileURLToPath(new URL('.', import.meta.url));
 const out = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
 
+// Fail fast with a clear message when the game folder is missing, instead
+// of letting cpSync throw a bare ENOENT halfway through the copy.
+if (!existsSync(join(here, 'game'))) {
+  throw new Error('game/ folder missing next to main.ts — nothing to hand in');
+}
+
 mkdirSync(out, { recursive: true });
 cpSync(join(here, 'game'), join(out, 'game'), { recursive: true });
 mkdirSync(join(out, 'screenshots'), { recursive: true });

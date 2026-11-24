@@ -196,7 +196,10 @@ function frame(now) {
   renderer.cam.dist = Math.max(18, Math.min(70, renderer.cam.dist + orbit.zoom * 0.02));
 
   if (state === 'menu') {
-    // The city stays alive behind the title screen.
+    // The city stays alive behind the title screen, and the camera slowly
+    // orbits it so the title shows the world moving, not a still image.
+    // The sim is capped at 4 fixed steps per frame: at low frame rates
+    // the game slows down instead of spiralling into a catch-up backlog.
     renderer.cam.yaw += dtReal * 0.05;
     acc += dtReal;
     let steps = 0;

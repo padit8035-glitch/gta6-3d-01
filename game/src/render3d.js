@@ -80,6 +80,9 @@ function paintWindows() {
   const ctx = canvas.getContext('2d');
   ctx.fillStyle = '#d8d2c4';
   ctx.fillRect(0, 0, 128, 128);
+  // A quarter of the windows are lit, picked fresh on every load with
+  // Math.random(): pure decoration, not part of the deterministic sim, so
+  // the city layout and the play-test never depend on it.
   for (let row = 0; row < 8; row += 1) {
     for (let col = 0; col < 4; col += 1) {
       const lit = Math.random() < 0.25;
@@ -263,7 +266,9 @@ export function createRenderer(canvas, world) {
   scene.add(beacon);
   scene.add(beaconRing);
 
-  // Bullet tracers: one line segment set, rebuilt every frame.
+  // Bullet tracers: one line segment set, rebuilt every frame. The buffer
+  // holds 64 segments at most; a 65th tracer in the same frame is simply
+  // not drawn (tracers live only 0.1 s, so the cap is never hit in play).
   const tracerGeo = new THREE.BufferGeometry();
   const tracerPos = new Float32Array(64 * 2 * 3);
   tracerGeo.setAttribute('position', new THREE.BufferAttribute(tracerPos, 3));
@@ -401,6 +406,8 @@ export function createRenderer(canvas, world) {
 
     // Third-person camera: behind the focus, eased, with the mouse orbit.
     const heading = focus.angle + cam.yaw;
+    // The camera pulls back 10 units while driving, so the faster car
+    // still fits the frame with road ahead of it.
     const dist = player.inCar ? cam.dist + 10 : cam.dist;
     const baseHeight = dist * Math.tan(cam.pitch) + 6;
     const wantX = focus.x - Math.cos(heading) * dist;

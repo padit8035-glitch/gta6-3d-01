@@ -112,8 +112,10 @@ export function createCity(seed) {
           if (rand() < 0.18) continue; // an empty yard keeps the block airy
           const bw = range(rand, 62, 96);
           const bd = range(rand, 62, 96);
-          const cx = (bx + by) / 12; // taller towers toward the centre
-          const h = Math.round(range(rand, 20, 46) + (1 - cx) * range(rand, 0, 55));
+          // Taller towers toward the centre: centre is 0 at the far corner
+          // and 1 at the middle of the map (block 6, 6).
+          const centre = (bx + by) / 12;
+          const h = Math.round(range(rand, 20, 46) + (1 - centre) * range(rand, 0, 55));
           city.buildings.push({
             x: lot.x,
             y: lot.y,
@@ -127,7 +129,8 @@ export function createCity(seed) {
     }
   }
 
-  // Street lamps at every other intersection, two corners each.
+  // Street lamps at every other intersection, two corners each — one
+  // diagonal pair per crossing, so no crossing gets all four corners lit.
   for (let i = 0; i <= WORLD / ROAD_GAP; i += 1) {
     for (let j = 0; j <= WORLD / ROAD_GAP; j += 1) {
       if ((i + j) % 2 !== 0) continue;

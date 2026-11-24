@@ -40,6 +40,8 @@ export function objectiveText(state) {
   }
   if (mission.id === 'heat') return 'Lose the heat — get to the Hideout.';
   if (mission.id === 'payday') {
+    // dropsLeft counts DOWN from 6, so the HUD shows collected as total
+    // minus remaining — "3/6" after three drops, not "3 left".
     return `Collect the cash drops — ${PAYDAY_DROPS - state.dropsLeft}/${PAYDAY_DROPS}.`;
   }
   if (mission.id === 'score') {
@@ -93,6 +95,8 @@ export function startMission(state, world) {
       const radius = 420 + (i % 3) * 260;
       let x = places.market.x + Math.cos(angle) * radius;
       let y = places.market.y + Math.sin(angle) * radius;
+      // Clamp each drop inside the city, then nudge it onto the nearest
+      // road so it is never inside a building or unreachable on foot.
       x = Math.max(80, Math.min(2480, x));
       y = Math.max(80, Math.min(2480, y));
       // Nudge each drop onto the nearest road so it is never inside a building.

@@ -1,6 +1,9 @@
 // A tiny seeded random generator (mulberry32), so the same seed always
 // builds the same city. The game uses one seeded stream for the city and
 // one for traffic, so a play-test can replay the exact same world.
+// The 0x6d2b79f5 increment and the xor-shifts below are the standard
+// mulberry32 recipe — cheap, good enough for placement, and identical on
+// every platform, which is what determinism needs.
 export function mulberry32(seed) {
   let a = seed >>> 0;
   return function next() {

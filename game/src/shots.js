@@ -32,6 +32,8 @@ function drivePilot(world, tx, ty) {
 function stealNearestCar(world) {
   const parked = nearestParkedCar(world, world.player.x, world.player.y);
   if (!parked) return false;
+  // Staging only: the player is teleported next to the car, but the theft
+  // itself still runs through the real ENTER action in the sim below.
   world.player.x = parked.x + 40;
   world.player.y = parked.y + 40;
   stepWorld(world, { move: { x: 0, y: 0 }, actions: ACT.ENTER, shooting: false, aim: null }, STEP);
@@ -46,8 +48,9 @@ export function stageShot(scene, seed) {
   if (scene === 'drive') {
     startMission(world.missions, world);
     stealNearestCar(world);
-    // Cruise a loop of landmarks so the car is still driving, fast, when
-    // the shot is taken — it never parks on the target and circles it.
+    // Cruise a loop of landmarks for 14 seconds so the car is still
+    // driving, fast, when the shot is taken — it never parks on the
+    // target and circles it.
     const stops = [
       world.city.places.market, world.city.places.dock,
       world.city.places.garage, world.city.places.bank,

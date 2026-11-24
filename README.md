@@ -13,7 +13,8 @@ the fixer who runs the city from his garage.
 
 ## How to play
 
-Open `game/index.html` with any static server. Keyboard and mouse, no install, no network.
+Open `game/index.html` with any static server (or run `node serve.ts` and
+open http://localhost:8080). Keyboard and mouse, no install, no network.
 
 - **WASD / Arrows** — walk and drive (W accelerates, S brakes and reverses)
 - **E** — steal a car / get out
@@ -47,7 +48,8 @@ mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
 ```
 
 Screenshots are real renders of the game, taken with headless Chromium
-(see `browser-test.mjs` in the work directory).
+(see `browser-test.mjs` in this repo). `node playtest.mjs` runs the
+headless simulation tests (driving, chase, all five missions) in Node.
 
 Three.js (r180) is vendored under `game/vendor/` so the game plays with no
 network request.

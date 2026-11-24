@@ -97,6 +97,8 @@ export function createAudio() {
         audio.engineOsc.start();
       }
       const t = audio.ctx.currentTime;
+      // setTargetAtTime smooths the pitch and volume toward the new speed
+      // instead of jumping — a jump each frame would buzz.
       audio.engineOsc.frequency.setTargetAtTime(50 + level * 140, t, 0.08);
       audio.engineGain.gain.setTargetAtTime(0.02 + level * 0.05, t, 0.08);
     },
@@ -123,11 +125,13 @@ export function createAudio() {
       audio.sirenOsc.connect(audio.sirenGain);
       audio.sirenGain.connect(audio.master);
       audio.sirenOsc.start();
-      let high = false;
+      // Two-tone siren: the oscillator alternates between 650 and 950 Hz
+      // every 380 ms, which reads as the classic police wail.
+      let sirenHigh = false;
       audio.sirenTimer = setInterval(() => {
         if (!audio.sirenOsc) return;
-        high = !high;
-        audio.sirenOsc.frequency.setTargetAtTime(high ? 950 : 650, audio.ctx.currentTime, 0.05);
+        sirenHigh = !sirenHigh;
+        audio.sirenOsc.frequency.setTargetAtTime(sirenHigh ? 950 : 650, audio.ctx.currentTime, 0.05);
       }, 380);
     },
     shot() { noise(0.12, 0.35, 3200); tone(160, 0.08, 'square', 0.12, 60); },

@@ -153,7 +153,9 @@ export function roadSteer(world, car, tx, ty) {
   const diff = angDiff(wantAngle, car.angle);
   const steer = clamp(diff * 2.2, -1, 1);
   return { steer, throttle: 1, wantAngle, turning };
-}/** Raise the wanted level and restart the heat clock (fresh crime). */
+}
+
+/** Raise the wanted level and restart the heat clock (a fresh crime). */
 export function addWanted(world, n) {
   world.wanted = Math.min(WANTED.max, world.wanted + n);
   world.heatClock = 0;
@@ -269,7 +271,11 @@ function callAudio(world, name, ...args) {
   if (typeof fn === 'function') fn(...args);
 }
 
-/** One fixed simulation step. Input: { move: {x, y}, actions, shooting, aim }. */
+/** One fixed simulation step. Input: { move: {x, y}, actions, shooting, aim }.
+ * move.x is steering (-1..1) while driving and sideways while on foot;
+ * move.y is throttle (-1..1) while driving and forward/back while on foot.
+ * actions carries the ACT bit flags (PUNCH, ENTER); shooting + aim are the
+ * pistol (aim is a world point). run makes the player sprint on foot. */
 export function stepWorld(world, input, dt) {
   const events = { missionDone: 0, missionFailed: false };
   if (world.over) return events;
@@ -681,7 +687,9 @@ function updatePeds(world, dt) {
 function updatePolice(world, dt) {
   const player = world.player;
   // Reinforcements arrive while the heat is fresh; once the trail has gone
-  // cold for a while, no new cruiser joins the chase.
+  // cold for a while, no new cruiser joins the chase. Every new crime
+  // resets the heat clock (addWanted sets heatClock = 0), so a crime spree
+  // keeps the reinforcements coming.
   const wantedCars = Math.min(world.wanted, POLICE.maxCars);
   if (world.police.length < wantedCars && world.wanted > 0 && world.heatClock < 10) {
     const car = spawnPoliceCar(world);

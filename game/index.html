@@ -22,6 +22,8 @@
   #hud-objective-box { position: absolute; left: 14px; bottom: 14px; max-width: 480px; }
   #hud-objective { font-size: 16px; font-weight: 600; text-shadow: 0 2px 4px rgba(0,0,0,0.9); }
   #hud-distance { font-size: 13px; color: #ffd23a; margin-top: 3px; text-shadow: 0 2px 4px rgba(0,0,0,0.9); }
+  /* Speed sits just above the minimap: bottom 196px clears the 168px
+     minimap plus its 14px offset and a small gap. */
   #hud-speed { position: absolute; right: 14px; bottom: 196px; font-size: 22px; font-weight: 800; text-shadow: 0 2px 4px rgba(0,0,0,0.9); }
   #hud-minimap { position: absolute; right: 14px; bottom: 14px; width: 168px; height: 168px; border: 2px solid rgba(255,255,255,0.35); border-radius: 8px; background: #2c4630; }
   #hud-toast { position: absolute; top: 84px; left: 50%; transform: translateX(-50%); font-size: 19px; font-weight: 700; color: #ffd23a; text-shadow: 0 2px 6px rgba(0,0,0,0.9); transition: opacity 0.4s; white-space: nowrap; }
@@ -44,6 +46,10 @@
   #over-title { font-size: 72px; color: #ff5040; }
   #over-text { font-size: 18px; margin-top: 12px; color: #dfe6ee; }
 </style>
+<!-- three.js is vendored under game/vendor/ (three.module.min.js) so the
+     game loads no library over the network: the import map points the
+     bare "three" specifier at that local file. (The note sits outside the
+     script tag because an import map must contain pure JSON.) -->
 <script type="importmap">
   { "imports": { "three": "./vendor/three.module.min.js" } }
 </script>

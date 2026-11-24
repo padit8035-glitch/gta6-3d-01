@@ -26,6 +26,8 @@ export function createInput(canvas) {
     keys.delete(event.key.toLowerCase());
   });
   window.addEventListener('blur', () => {
+    // Losing the window must release every key: a key held while
+    // alt-tabbing would otherwise stay stuck down when the player returns.
     keys.clear();
     mouseDown = false;
     dragging = false;
@@ -51,6 +53,8 @@ export function createInput(canvas) {
       lastY = event.clientY;
     }
   });
+  // Non-passive on purpose: preventDefault() stops the page itself from
+  // scrolling or zooming while the wheel zooms the camera instead.
   canvas.addEventListener('wheel', (event) => {
     event.preventDefault();
     zoomDelta += event.deltaY;
